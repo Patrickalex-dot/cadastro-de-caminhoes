@@ -6,14 +6,15 @@ namespace CadastroCaminhao
 {
     public class Viagem
     {
-        Caminhao Caminhao { get; set; }
-        Motorista Motorista  { get; set; }
+        public Caminhao Caminhao { get; set; }
+        public Motorista Motorista { get; set; }
         public int Id { get; set; }
-        public Viagem(Caminhao caminhao, Motorista motorista ,int id) 
+        public Viagem() { }
+        public Viagem(Caminhao caminhao, Motorista motorista ) 
         { 
             this.Caminhao = caminhao;
             this.Motorista = motorista;
-            this.Id = id;   
+             
         }
     }
 }

@@ -28,39 +28,19 @@ namespace CadastroCaminhao
             AtualizarMotorista,
 
         }
-
-        private static List<Caminhao> LstCaminhao { get; set; } = new List<Caminhao>();
-        private static List<Motorista> LstMotorista { get; set; } = new List<Motorista>();
-        private static List<Viagem> LstViagem { get; set; } = new List<Viagem>();
-
-        private void MostrarCaminhoesDisponiveis()
+        enum Operaacao4
         {
-            foreach (Caminhao caminhao in LstCaminhao)
-            {
-                Console.WriteLine(caminhao.ToString());
-            }
+            RemoverCaminhao,
+            RemoverMotorista,
+            RemoverViagem,
         }
+        public static List<Caminhao> LstCaminhao { get; set; } = new List<Caminhao>();
+        public static List<Motorista> LstMotorista { get; set; } = new List<Motorista>();
+        public static List<Viagem> LstViagem { get; set; } = new List<Viagem>();
 
-        private Caminhao SelectCaminhao()
-        {
-            int id = 0;
-            Caminhao veiculo = null;
-            var caminhaoQuery =
-              from Caminhao caminhao in LstCaminhao
-              where caminhao.Id == id
-              select caminhao;
-            MostrarCaminhoesDisponiveis();
-            while (veiculo == null)
-            {
-                Console.WriteLine("Digite o ID do veículo: ");
-                id = Convert.ToInt32(Console.ReadLine());
-                foreach (var caminhao in caminhaoQuery)
-                {
-                    veiculo = caminhao;
-                }
-            }
-            return veiculo;
-        }
+        
+
+       
 
         private static Caminhao ObterCaminhaoPorId(int idPEsquisar)
         {
@@ -69,6 +49,10 @@ namespace CadastroCaminhao
         private static Motorista ObterMotoristaPorId(int idProcurar) 
         {
             return LstMotorista.FirstOrDefault(m => m.Id == idProcurar);
+        }
+        private static Viagem ObterViagemPorId(int idProcurar)
+        {
+            return LstViagem.FirstOrDefault(v => v.Id == idProcurar);
         }
 
         private static void CriarCaminhao(Caminhao caminhao)
@@ -111,6 +95,18 @@ namespace CadastroCaminhao
             if (caminhaoExcluir != null)
                 LstCaminhao.Remove(caminhaoExcluir);
         }
+        private static void ExcluirMotorista(int idExcluir)
+        {
+            Motorista motoristaExcluir = ObterMotoristaPorId(idExcluir);
+            if (motoristaExcluir != null)
+                LstMotorista.Remove(motoristaExcluir);
+        }
+        private static void ExcluirViagem(int idExcluir)
+        {
+            Viagem viagemExcluir = ObterViagemPorId(idExcluir);
+            if (viagemExcluir != null)
+                LstViagem.Remove(viagemExcluir);
+        }
 
         public static int ObterIdParaCaminhao(int Id)
         {
@@ -125,10 +121,7 @@ namespace CadastroCaminhao
             return LstViagem.Count + 1;
         }
 
-        // private static Caminhao ObterCaminhaoPelaPlaca(string placaPesquisar)
-        //{
-          //  return LstCaminhao.FirstOrDefault(c => c.Placa.ToUpper() == placaPesquisar.ToUpper());
-        //}
+     
 
         
 
@@ -184,18 +177,19 @@ namespace CadastroCaminhao
                             break;
 
                         case (int)Operacao2.CadastrarViagem:
+                            Viagem viagem = new Viagem();
                             Console.WriteLine("Digite o Id do veiculo que fará a viagem");
-                            int i = Convert.ToInt32(Console.ReadLine());
-                            ObterCaminhaoPorId(i);
-                            int Idviagem = 0;
-                            ObterIdParaViagem(Idviagem);
-                            Console.WriteLine("Digite o Id do motorista que fará a viagem");
-                            int IdCondutor = Convert.ToInt32(Console.ReadLine());
-                            ObterMotoristaPorId(IdCondutor);
+                            int i = int.Parse(Console.ReadLine());
+                            viagem.Caminhao = ObterCaminhaoPorId(i);
+                            Console.WriteLine("Digite o Id do motorista");
+                            int id = int.Parse(Console.ReadLine());
+                            viagem.Motorista = ObterMotoristaPorId(id);
+                            LstViagem.Add(viagem);
                             
                             
 
                             break;
+                            
 
 
                     }
@@ -204,19 +198,12 @@ namespace CadastroCaminhao
 
 
 
-                        // ObterPelaPlaca
-                        //var res = ObterCaminhaoPelaPlaca("abc1234");
+                        
 
-                        // Alterar um Caminhão.
-                        //Caminhao caminhaoAlterar = ObterCaminhaoPorId(1);
-                        //if (caminhaoAlterar != null)
-                        //AlterarCaminhao(1, "Scania ALterada", "XXX-1234");
+                        
 
 
-                        // Excluir um Caminhao
-                        //int idExcluir = int.Parse(Console.ReadLine());
-                        //ExcluirCaminhao(idExcluir);
-                        //ExcluirCaminhao(1);
+                       
 
                 }
                 if (opcao == (int)Operacao.Atualizar)
@@ -253,6 +240,38 @@ namespace CadastroCaminhao
 
                             break;
                     }
+                }
+                if(opcao == (int)Operacao.Remover)
+                {
+                    Console.WriteLine("Menu");
+                    Console.WriteLine("0 - Remover caminhão");
+                    Console.WriteLine("1 - Remover Motorista");
+                    Console.WriteLine("2 - Remover Viagem");
+                    int opcao4 = Convert.ToInt32(Console.ReadLine());
+
+                    switch (opcao4) 
+                    {
+                        case (int)Operaacao4.RemoverCaminhao:
+                            Console.WriteLine("Digite o Id do caminhçao que deseja remover");
+                            int idCaminhao = Convert.ToInt32(Console.ReadLine());
+                            ExcluirCaminhao(idCaminhao);
+
+                            break;
+
+                        case (int)Operaacao4.RemoverMotorista:
+                            Console.WriteLine("Digite o Id do motorista que deseja remover");
+                            int idMotorista = Convert.ToInt32(Console.ReadLine());
+                            ExcluirMotorista(idMotorista);
+                            break;
+
+                        case (int)Operaacao4.RemoverViagem:
+                            Console.WriteLine("Digite a viagem que deseja remover");
+                            int idViagem = Convert.ToInt32(Console.ReadLine());
+                            ExcluirViagem(idViagem);
+                            break;
+                    }
+
+
                 }
                 
                 Console.WriteLine("Menu");
