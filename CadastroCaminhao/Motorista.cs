@@ -6,8 +6,14 @@ namespace CadastroCaminhao
 {
     public class Motorista
     {
-        string Nome { get; set; }
-        string Endereco { get; set; }
-        int id { get; set; }
+        public string Nome { get; set; }
+        public string Endereco { get; set; }
+        public int Id { get; set; }
+        public Motorista(string nome, string endereco, int id)
+        {
+            Nome = nome;
+            Endereco = endereco;
+            Id = id;
+        }
     }
 }
